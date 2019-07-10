@@ -1,9 +1,9 @@
 import nltk
-nltk.download('gutenberg')
+nltk.download('stopwords')
+nltk.download('brown')
 import numpy as np
 # np.seterr(divide='ignore', invalid='ignore')
 from nltk.corpus import stopwords, brown
-from nltk.corpus import gutenberg
 from nltk.cluster.util import cosine_distance
 from operator import itemgetter 
 
@@ -65,25 +65,24 @@ def build_similarity_matrix(sentences, stop):
     return s
 
 def main():
-    # text = gutenberg.words('carroll-alice.txt')
     stop_words = stopwords.words('english')
 
     # sentences = nltk.sent_tokenize(text)
-    #sentences = brown.sents('ca01')
+    sentences = brown.sents('ca01')
 
     #TODO import text file and tokenize it into sentences, 
     # then tokenzse those sentences into words
     # Ex: [[u'The', u'Fulton', u'County', u'Grand', u'Jury', u'said', u'Friday', u'an', u'investigation', u'of', u"Atlanta's", u'recent', u'primary', u'election', u'produced', u'``', u'no', u'evidence', u"''", u'that', u'any', u'irregularities', u'took', u'place', u'.'], [u'The', u'jury', u'further', u'said', u'in', u'term-end', u'presentments', u'that', u'the', u'City', u'Executive', u'Committee', u',', u'which', u'had', u'over-all', u'charge', u'of', u'the', u'election', u',', u'``', u'deserves', u'the', u'praise', u'and', u'thanks', u'of', u'the', u'City', u'of', u'Atlanta', u"''", u'for', u'the', u'manner', u'in', u'which', u'the', u'election', u'was', u'conducted', u'.'], ...]
 
-    #S = build_similarity_matrix(sentences, stop_words)
+    S = build_similarity_matrix(sentences, stop_words)
 
     #TODO: fix pagerank implementation
-    #sentence_ranks = pagerank(S) 
+    sentence_ranks = pagerank(S) 
 
     # Sort the sentence ranks
-    # ranked_sentence_indexes = [item[0] for item in sorted(enumerate(sentence_ranks), key=lambda item: -item[1])]
-    # selected_sentences = sorted(ranked_sentence_indexes[:20])
-    # summary = itemgetter(*selected_sentences)(sentences)
+    ranked_sentence_indexes = [item[0] for item in sorted(enumerate(sentence_ranks), key=lambda item: -item[1])]
+    selected_sentences = sorted(ranked_sentence_indexes[:20])
+    summary = itemgetter(*selected_sentences)(sentences)
 
     # for sentence in summary:
     #     print(' '.join(sentence))
