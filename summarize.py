@@ -52,7 +52,7 @@ def get_sentence_similarity(sentence_1, sentence_2, stop_words):
 
 def build_similarity_matrix(sentences, stop_words):
     num_sentences = len(sentences)
-    s = np.zeros(num_sentences, num_sentences)
+    s = np.zeros((num_sentences, num_sentences))
 
     for index1 in range(num_sentences):
         for index2 in range(num_sentences):
