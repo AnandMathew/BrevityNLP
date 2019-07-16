@@ -74,6 +74,8 @@ def main():
     # sentences = nltk.sent_tokenize(text)
     sentences = brown.sents('ca01')
 
+
+
     # TODO: import text file and tokenize it into sentences,
     #  then tokenize those sentences into words
     #  ex: [[u'The', u'Fulton', u'County', u'Grand', u'Jury', u'said', u'Friday' ...], ...]

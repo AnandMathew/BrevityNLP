@@ -1,6 +1,6 @@
 # BrevityNLP
 
-To install:  
-`pip install --user -U nltk`  
-`pip install --user -U numpy`
+
+To install:
+`pip install -r requirements.txt`
 
