@@ -1,5 +1,6 @@
 import nltk
 import numpy as np
+import re
 from nltk.corpus import stopwords, brown
 from nltk.cluster.util import cosine_distance
 from operator import itemgetter
@@ -7,6 +8,10 @@ from operator import itemgetter
 nltk.download('stopwords')
 nltk.download('brown')
 # np.seterr(divide='ignore', invalid='ignore')
+
+# parameters
+MIN_WORD_LEN = 2
+MIN_WORDS_IN_SENT = 4
 
 
 def run_page_rank(A, eps=0.0001, d=0.85):
@@ -47,7 +52,11 @@ def get_sentence_similarity(sentence_1, sentence_2, stop_words):
             continue
         vector2[all_words.index(word.lower())] += 1
 
-    return 1 - cosine_distance(vector1, vector2)
+    cos_dist = cosine_distance(vector1, vector2)
+
+    val = 1.0 - cos_dist
+
+    return val
 
 
 def build_similarity_matrix(sentences, stop_words):
@@ -58,7 +67,8 @@ def build_similarity_matrix(sentences, stop_words):
         for index2 in range(num_sentences):
             if index1 == index2:
                 continue
-            s[index1][index2] = get_sentence_similarity(sentences[index1], sentences[index2], stop_words)
+            sentence_similarity = get_sentence_similarity(sentences[index1], sentences[index2], stop_words)
+            s[index1][index2] = sentence_similarity
 
     for index3 in range(len(s)):
         if s[index3].sum() == 0:
@@ -71,18 +81,34 @@ def build_similarity_matrix(sentences, stop_words):
 def main():
     stop_words = stopwords.words('english')
 
-    # sentences = nltk.sent_tokenize(text)
-    sentences = brown.sents('ca01')
+    with open("output.txt", "r") as input_file:
+        text = input_file.readlines()
 
+    sentences0 = nltk.sent_tokenize(text[0])
 
+    sentences = []
+    for sent in sentences0:
+        # Removing Square Brackets and Extra Spaces
+        sent = sent.lower()
+        sent = re.sub(r'\[[0-9]*\]', ' ', sent)
+        sent = re.sub(r'\s+', ' ', sent)
 
-    # TODO: import text file and tokenize it into sentences,
-    #  then tokenize those sentences into words
-    #  ex: [[u'The', u'Fulton', u'County', u'Grand', u'Jury', u'said', u'Friday' ...], ...]
+        # Removing special characters and digits
+        formatted_sent = re.sub('[^a-zA-Z]', ' ', sent)
+        formatted_sent = re.sub(r'\s+', ' ', formatted_sent)
+
+        words = nltk.word_tokenize(formatted_sent)
+
+        # Removing single letter words
+        for word in words:
+            if len(word) < MIN_WORD_LEN:
+                words.remove(word)
+
+        if len(words) > MIN_WORDS_IN_SENT:
+            sentences.append(words)
 
     s = build_similarity_matrix(sentences, stop_words)
 
-    # TODO: fix pagerank implementation
     sentence_ranks = run_page_rank(s)
 
     # Sort the sentence ranks
