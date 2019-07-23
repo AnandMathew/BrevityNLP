@@ -1,28 +1,7 @@
-import nltk
 import heapq
-import bs4 as bs
-import urllib.request
 import re
 
-from nltk.corpus import brown
-
-
-# Scrapping the data
-# scraped_data = urllib.request.urlopen('https://en.wikipedia.org/wiki/Artificial_intelligence')
-#
-# # HTML Format
-# article = scraped_data.read()
-#
-# # Organized HTML Format
-# parsed_article = bs.BeautifulSoup(article, 'lxml')
-#
-# paragraphs = parsed_article.find_all('p')
-#
-# article_text = ""
-#
-# for p in paragraphs:
-#     # Gets the text from within <p> ... </p> HTML
-#     article_text += p.text
+import nltk
 
 with open("raw_input.txt", "r") as input_file:
     article_text_array = input_file.readlines()
@@ -32,7 +11,6 @@ article_text = ""
 for sentence in article_text_array:
     article_text += sentence
 
-# Pre-processing
 # Removing Square Brackets and Extra Spaces
 article_text = re.sub(r'\[[0-9]*\]', ' ', article_text)
 article_text = re.sub(r'\s+', ' ', article_text)

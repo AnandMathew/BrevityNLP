@@ -14,18 +14,28 @@ MIN_WORD_LEN = 2
 MIN_WORDS_IN_SENT = 4
 
 
-def run_page_rank(A, eps=0.0001, d=0.85):
-    P = np.ones(len(A)) / len(A)
+def page_rank(sim_matrix, eps=0.0001, d=0.85):
+    R = np.ones(len(sim_matrix))
 
     while True:
-        new_P = np.ones(len(A)) * (1 - d) / len(A) + d * A.T.dot(P)
-        delta = abs(new_P - P).sum()
-        if delta <= eps:
-            return new_P
-        P = new_P
+        r = np.ones(len(sim_matrix)) * (1 - d) + d * sim_matrix.T.dot(R)
+        if abs(r - R).sum() <= eps:
+            return r
+        R = r
+
+    # ones_matrix = np.ones(len(sim_matrix))
+    # P = ones_matrix / len(sim_matrix)
+    # # print(P)
+    #
+    # while True:
+    #     new_P = np.ones(len(sim_matrix)) * (1 - d) / len(sim_matrix) + d * sim_matrix.T.dot(P)
+    #     delta = abs(new_P - P).sum()
+    #     if delta <= eps:
+    #         return new_P
+    #     P = new_P
 
 
-def get_sentence_similarity(sentence_1, sentence_2, stop_words):
+def sentence_similarity(sentence_1, sentence_2, stop_words):
     if stop_words is None:
         stop_words = []
 
@@ -67,13 +77,15 @@ def build_similarity_matrix(sentences, stop_words):
         for index2 in range(num_sentences):
             if index1 == index2:
                 continue
-            sentence_similarity = get_sentence_similarity(sentences[index1], sentences[index2], stop_words)
-            s[index1][index2] = sentence_similarity
+            sentence_sim = sentence_similarity(sentences[index1], sentences[index2], stop_words)
+            s[index1][index2] = sentence_sim
 
     for index3 in range(len(s)):
         if s[index3].sum() == 0:
             continue
         s[index3] /= s[index3].sum()
+
+    print(s)
 
     return s
 
@@ -109,15 +121,20 @@ def main():
 
     s = build_similarity_matrix(sentences, stop_words)
 
-    sentence_ranks = run_page_rank(s)
+    sentence_ranks = page_rank(s)
+
+    # print(sentence_ranks)
 
     # Sort the sentence ranks
-    ranked_sentence_indexes = [item[0] for item in sorted(enumerate(sentence_ranks), key=lambda item: -item[1])]
-    selected_sentences = sorted(ranked_sentence_indexes[:20])
+    for item in sorted(enumerate(sentence_ranks), key=lambda item: -item[1]):
+        ranked_sentence_indexes = item[0]
+
+    selected_sentences = sorted(ranked_sentence_indexes[:7])
+
     summary = itemgetter(*selected_sentences)(sentences)
 
-    for sentence in summary:
-        print(' '.join(sentence))
+    # for sentence in summary:
+    #     print(' '.join(sentence))
 
 
 main()
