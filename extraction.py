@@ -24,7 +24,7 @@ from nltk.corpus import brown
 #     # Gets the text from within <p> ... </p> HTML
 #     article_text += p.text
 
-with open("output.txt", "r") as input_file:
+with open("raw_input.txt", "r") as input_file:
     article_text_array = input_file.readlines()
 
 
