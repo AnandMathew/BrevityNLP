@@ -3,7 +3,7 @@ import re
 
 import nltk
 
-summary_len = int(input("Please enter length of summary: "))
+summary_len = 20
 
 with open("raw_input.txt", "r") as input_file:
     article_text_array = input_file.readlines()
