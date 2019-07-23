@@ -6,24 +6,30 @@ import re
 
 from nltk.corpus import brown
 
-nltk.download('punkt')
-
 # Scrapping the data
-scraped_data = urllib.request.urlopen('https://en.wikipedia.org/wiki/Artificial_intelligence')
+# scraped_data = urllib.request.urlopen('https://en.wikipedia.org/wiki/Artificial_intelligence')
+#
+# # HTML Format
+# article = scraped_data.read()
+#
+# # Organized HTML Format
+# parsed_article = bs.BeautifulSoup(article, 'lxml')
+#
+# paragraphs = parsed_article.find_all('p')
+#
+# article_text = ""
+#
+# for p in paragraphs:
+#     # Gets the text from within <p> ... </p> HTML
+#     article_text += p.text
 
-# HTML Format
-article = scraped_data.read()
+with open("output.txt", "r") as input_file:
+    article_text_array = input_file.readlines()
 
-# Organized HTML Format
-parsed_article = bs.BeautifulSoup(article, 'lxml')
-
-paragraphs = parsed_article.find_all('p')
 
 article_text = ""
-
-for p in paragraphs:
-    # Gets the text from within <p> ... </p> HTML
-    article_text += p.text
+for sentence in article_text_array:
+    article_text += sentence
 
 # Pre-processing
 # Removing Square Brackets and Extra Spaces
@@ -36,18 +42,6 @@ formatted_article_text = re.sub(r'\s+', ' ', formatted_article_text)
 
 # Converting text to sentences
 sentence_list = nltk.sent_tokenize(article_text)
-# print(sentence_list)
-
-nltk.download('brown')
-sentences = brown.sents('ca01')
-
-sentence_list = []
-
-for sent in sentences:
-    sentence_list.append(' '.join(sent))
-
-# print(sentences)
-print(sentence_list)
 
 # Finding weighted frequency of occurence
 stopwords = nltk.corpus.stopwords.words('english')
@@ -80,4 +74,4 @@ for sent in sentence_list:
 summary_sentences = heapq.nlargest(7, sentence_scores, key=sentence_scores.get)
 
 summary = ' '.join(summary_sentences)
-# print(summary)
+print(summary)
