@@ -3,6 +3,8 @@ import re
 
 import nltk
 
+summary_len = int(input("Please enter length of summary: "))
+
 with open("raw_input.txt", "r") as input_file:
     article_text_array = input_file.readlines()
 
@@ -50,7 +52,7 @@ for sent in sentence_list:
                     sentence_scores[sent] += word_frequencies[word]
 
 # Getting the summary
-summary_sentences = heapq.nlargest(7, sentence_scores, key=sentence_scores.get)
+summary_sentences = heapq.nlargest(summary_len, sentence_scores, key=sentence_scores.get)
 
 summary = ' '.join(summary_sentences)
 print(summary)
