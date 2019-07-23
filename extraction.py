@@ -6,6 +6,7 @@ import re
 
 from nltk.corpus import brown
 
+
 # Scrapping the data
 # scraped_data = urllib.request.urlopen('https://en.wikipedia.org/wiki/Artificial_intelligence')
 #
