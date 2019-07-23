@@ -1,7 +1,7 @@
 # BrevityNLP
 
-
-To install:
-- Download python 3
-- Run `pip install -r requirements.txt`
-
+For mac:
+- Install homebrew
+- brew install python3
+- Run `pip3 install -r requirements.txt`
+- Run `python3 summarize.py`
