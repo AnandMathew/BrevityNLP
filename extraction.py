@@ -59,5 +59,14 @@ for message in consumer:
     summary_sentences = heapq.nlargest(summary_len, sentence_scores, key=sentence_scores.get)
 
     summary = ' '.join(summary_sentences)
+    # TODO: clean this replacement up
+    summary = summary.replace('-\\n', '');
+    summary = summary.replace('\n', ' ');
+    summary = summary.replace('\\n', ' ');
+    summary = summary.replace('\\xe2', ' ');
+    summary = summary.replace('\\x80', ' ');
+    summary = summary.replace('\\x99', ' ');
+    summary = summary.replace('\\x9c', ' ');
+    summary = summary.replace('\\x9d', ' ');
     print(summary)
     producer.send('brevity_responses' , str.encode(summary), key = key.encode())
