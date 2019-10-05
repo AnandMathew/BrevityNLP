@@ -1,7 +1,8 @@
 # BrevityNLP
-
-For mac:
-- Install homebrew
-- Run `brew install python3`
-- Run `pip3 install -r requirements.txt`
-- Run `python3 extraction.py`
+#### Setup
+```
+python -m venv c:\virtualenvs\PYTHON3
+c:\virtualenvs\PYTHON3\Scripts\activate 
+cd BrevityNLP
+pip install -r requirements.txt -U
+```
