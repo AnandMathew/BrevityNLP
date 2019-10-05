@@ -1,14 +1,15 @@
 import heapq
 import re
+
+import nltk
 from kafka import KafkaConsumer
 from kafka import KafkaProducer
 
-import nltk
-
 summary_len = 20
 
-consumer = KafkaConsumer('brevity_requests', bootstrap_servers=['localhost:9092'])
 producer = KafkaProducer(bootstrap_servers='localhost:9092')
+consumer = KafkaConsumer('brevity_requests',
+                         bootstrap_servers=['localhost:9092'])
 
 for message in consumer:
     key = str(message.key)
@@ -56,17 +57,19 @@ for message in consumer:
                         sentence_scores[sent] += word_frequencies[word]
 
     # Getting the summary
-    summary_sentences = heapq.nlargest(summary_len, sentence_scores, key=sentence_scores.get)
+    summary_sentences = heapq.nlargest(summary_len, sentence_scores,
+                                       key=sentence_scores.get)
 
     summary = ' '.join(summary_sentences)
     # TODO: clean this replacement up
-    summary = summary.replace('-\\n', '');
-    summary = summary.replace('\n', ' ');
-    summary = summary.replace('\\n', ' ');
-    summary = summary.replace('\\xe2', ' ');
-    summary = summary.replace('\\x80', ' ');
-    summary = summary.replace('\\x99', ' ');
-    summary = summary.replace('\\x9c', ' ');
-    summary = summary.replace('\\x9d', ' ');
+    summary = summary.replace('-\\n', '')
+    summary = summary.replace('\n', ' ')
+    summary = summary.replace('\\n', ' ')
+    summary = summary.replace('\\xe2', ' ')
+    summary = summary.replace('\\x80', ' ')
+    summary = summary.replace('\\x99', ' ')
+    summary = summary.replace('\\x9c', ' ')
+    summary = summary.replace('\\x9d', ' ')
     print(summary)
-    producer.send('brevity_responses' , str.encode(summary), key = key.encode())
+
+    producer.send('brevity_responses', str.encode(summary), key=key.encode())
